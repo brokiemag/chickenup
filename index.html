@@ -7,7 +7,9 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Boogaloo&display=swap');
 
+/* SF Pro Display system stack used everywhere except Boogaloo titles */
 :root {
+  --sf: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
   --bg:      #0d0d0d;
   --panel:   #161616;
   --panel2:  #1e1e1e;
@@ -15,6 +17,7 @@
   --yellow:  #ffe94d;
   --coral:   #ff5f5f;
   --green:   #4dffb4;
+  --blue:    #5bc4ff;
   --dim:     #555;
   --text:    #f0f0f0;
   --r:       14px;
@@ -24,7 +27,7 @@
 
 html, body {
   height: 100%; background: var(--bg); color: var(--text);
-  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-family: var(--sf);
   overflow: hidden; touch-action: none;
   user-select: none; -webkit-user-select: none;
 }
@@ -44,7 +47,7 @@ body::before {
   gap: 13px;
 }
 
-/* header */
+/* ── header ── */
 .header { text-align: center; flex-shrink: 0; }
 .emoji-title {
   font-size: clamp(38px, 12vw, 60px); line-height: 1;
@@ -56,13 +59,13 @@ body::before {
   50%      { transform: translateY(-6px) rotate(4deg); }
 }
 .app-title {
-  font-family: 'Boogaloo', cursive;
+  font-family: 'Boogaloo', cursive; /* keep Boogaloo only here */
   font-size: clamp(26px, 8vw, 44px);
   color: var(--yellow); letter-spacing: 2px;
   text-shadow: 3px 3px 0 #a06800, 0 0 18px #ffe94d44;
 }
 
-/* meter ring */
+/* ── meter ring ── */
 .meter-wrap {
   position: relative; flex-shrink: 0;
   width: min(160px, 44vw); aspect-ratio: 1;
@@ -78,19 +81,20 @@ body::before {
 }
 .meter-center { display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; }
 .meter-value {
-  font-family: 'Boogaloo', cursive;
+  /* SF Pro Display for the big number */
+  font-family: var(--sf); font-weight: 700;
   font-size: clamp(30px, 10vw, 46px); color: var(--yellow);
   line-height: 1; text-shadow: 0 0 16px var(--yellow);
 }
-.meter-label { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 1.5px; }
+.meter-label { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 1.5px; font-family: var(--sf); }
 
-/* status */
+/* ── status pill ── */
 .status-pill {
   display: flex; align-items: center; gap: 8px;
   padding: 7px 18px; border-radius: 999px;
   border: 1.5px solid var(--border); background: var(--panel);
   font-size: 12px; font-weight: 700; letter-spacing: 1px;
-  text-transform: uppercase; color: var(--dim);
+  text-transform: uppercase; color: var(--dim); font-family: var(--sf);
   transition: border-color .3s, color .3s, box-shadow .3s; flex-shrink: 0;
 }
 .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--dim); transition: background .3s, box-shadow .3s; }
@@ -100,13 +104,53 @@ body::before {
 .status-pill.panic   .status-dot { background: var(--coral);  box-shadow: 0 0 8px var(--coral);  animation: pdot .4s ease-in-out infinite; }
 @keyframes pdot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.5)} }
 
-/* stats row */
+/* ── stats row ── */
 .stats-row { display: flex; gap: 8px; width: 100%; flex-shrink: 0; }
 .stat-box { flex: 1; background: var(--panel); border: 1px solid var(--border); border-radius: var(--r); padding: 8px 10px; text-align: center; }
-.stat-val { font-family: 'Boogaloo', cursive; font-size: 19px; color: var(--yellow); }
-.stat-lbl { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
+.stat-val {
+  /* SF Pro Display for volume %, speed, delay numbers */
+  font-family: var(--sf); font-weight: 700;
+  font-size: 19px; color: var(--yellow);
+}
+.stat-lbl { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; font-family: var(--sf); }
 
-/* ===== CONTROLS PANEL ===== */
+/* ════════════════════════════════════
+   MODE PILLS — Pocket / In Hand
+   ════════════════════════════════════ */
+.mode-row {
+  display: flex; gap: 8px; width: 100%; flex-shrink: 0;
+}
+.mode-pill {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 10px 12px; border-radius: var(--r);
+  border: 1.5px solid var(--border); background: var(--panel);
+  font-family: var(--sf); font-size: 13px; font-weight: 600;
+  color: var(--dim); cursor: pointer; letter-spacing: 0.3px;
+  transition: border-color .2s, color .2s, background .2s, box-shadow .2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.mode-pill .mode-icon { font-size: 18px; line-height: 1; }
+.mode-pill .mode-lbl  { display: flex; flex-direction: column; }
+.mode-pill .mode-name { font-size: 13px; font-weight: 700; }
+.mode-pill .mode-sub  { font-size: 10px; color: var(--dim); transition: color .2s; }
+
+.mode-pill.active-pocket {
+  border-color: var(--blue); color: var(--blue);
+  background: #0d1e2a;
+  box-shadow: 0 0 14px #5bc4ff33;
+}
+.mode-pill.active-pocket .mode-sub { color: #5bc4ff99; }
+
+.mode-pill.active-hand {
+  border-color: var(--yellow); color: var(--yellow);
+  background: #1e1800;
+  box-shadow: 0 0 14px #ffe94d33;
+}
+.mode-pill.active-hand .mode-sub { color: #ffe94d99; }
+
+/* ════════════════════════════════════
+   CONTROLS PANEL
+   ════════════════════════════════════ */
 .panel-wrap {
   width: 100%; flex-shrink: 0;
   background: var(--panel); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden;
@@ -118,18 +162,26 @@ body::before {
   -webkit-tap-highlight-color: transparent;
 }
 .panel-header.open { border-color: var(--border); }
-.panel-title { font-family: 'Boogaloo', cursive; font-size: 17px; color: var(--yellow); letter-spacing: 1px; }
+.panel-title {
+  /* SF Pro Display for "CONTROLS" label */
+  font-family: var(--sf); font-size: 15px; font-weight: 700;
+  color: var(--yellow); letter-spacing: 1px; text-transform: uppercase;
+}
 .panel-chevron { font-size: 13px; color: var(--dim); transition: transform .25s; display: inline-block; }
 .panel-header.open .panel-chevron { transform: rotate(180deg); }
 .panel-body { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
-.panel-body.open { max-height: 700px; }
+.panel-body.open { max-height: 800px; }
 .panel-inner { padding: 14px 16px; display: flex; flex-direction: column; gap: 14px; }
 
 .ctrl-row { display: flex; flex-direction: column; gap: 5px; }
 .ctrl-top  { display: flex; justify-content: space-between; align-items: baseline; }
-.ctrl-label { font-size: 12px; color: var(--text); font-weight: 700; }
-.ctrl-desc  { font-size: 10px; color: var(--dim); line-height: 1.4; }
-.ctrl-val   { font-family: 'Boogaloo', cursive; font-size: 16px; color: var(--yellow); min-width: 52px; text-align: right; }
+.ctrl-label { font-family: var(--sf); font-size: 13px; font-weight: 600; color: var(--text); }
+.ctrl-desc  { font-family: var(--sf); font-size: 10px; color: var(--dim); line-height: 1.4; }
+.ctrl-val   {
+  /* SF Pro Display for the slider value numbers */
+  font-family: var(--sf); font-weight: 700;
+  font-size: 15px; color: var(--yellow); min-width: 52px; text-align: right;
+}
 
 input[type=range] {
   -webkit-appearance: none; appearance: none;
@@ -153,18 +205,21 @@ input[type=range]::-moz-range-thumb {
 .reset-btn {
   align-self: flex-end; padding: 6px 16px; border-radius: 8px;
   border: 1px solid var(--border); background: var(--panel2);
-  color: var(--dim); font-size: 12px; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-  font-weight: 700; cursor: pointer; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--dim); font-family: var(--sf); font-size: 12px;
+  font-weight: 600; cursor: pointer; letter-spacing: 0.5px; text-transform: uppercase;
   -webkit-tap-highlight-color: transparent;
 }
 .reset-btn:active { background: var(--border); }
 
-/* start button */
+/* ── start / stop button ── */
 .btn-start {
   width: 100%; padding: 18px; border-radius: var(--r); border: none;
   background: var(--yellow); color: #1a0e00;
-  font-family: 'Boogaloo', cursive; font-size: clamp(20px, 6vw, 28px);
-  letter-spacing: 2px; cursor: pointer; position: relative; overflow: hidden;
+  /* SF Pro Display for START GAME text */
+  font-family: var(--sf); font-weight: 800;
+  font-size: clamp(17px, 5vw, 22px);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  cursor: pointer; position: relative; overflow: hidden;
   box-shadow: 0 5px 0 #a06800, 0 0 28px #ffe94d33;
   transition: transform .1s, box-shadow .1s; flex-shrink: 0;
   -webkit-tap-highlight-color: transparent;
@@ -173,10 +228,10 @@ input[type=range]::-moz-range-thumb {
 .btn-start::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg,rgba(255,255,255,.18) 0%,transparent 60%); pointer-events: none; }
 .btn-start.stop { background: var(--coral); color: #fff; box-shadow: 0 5px 0 #8a1a1a, 0 0 28px #ff5f5f22; }
 
-.hint { font-size: 11px; color: var(--dim); text-align: center; line-height: 1.6; max-width: 320px; flex-shrink: 0; }
+.hint { font-family: var(--sf); font-size: 11px; color: var(--dim); text-align: center; line-height: 1.6; max-width: 320px; flex-shrink: 0; }
 .hint strong { color: var(--text); }
 
-/* ripple + panic */
+/* ── ripple + panic ── */
 .ripple-ring {
   position: fixed; top: 50%; left: 50%; width: 60px; height: 60px; border-radius: 50%;
   border: 3px solid var(--yellow); transform: translate(-50%,-50%) scale(0); opacity: 0;
@@ -198,11 +253,13 @@ input[type=range]::-moz-range-thumb {
 
 <div id="app">
 
+  <!-- Header -->
   <div class="header">
     <div class="emoji-title">🐔</div>
     <div class="app-title">CHICKEN PARTY</div>
   </div>
 
+  <!-- Meter -->
   <div class="meter-wrap">
     <svg class="meter-svg" viewBox="0 0 100 100">
       <circle class="meter-track" cx="50" cy="50" r="42"/>
@@ -214,21 +271,41 @@ input[type=range]::-moz-range-thumb {
     </div>
   </div>
 
+  <!-- Status -->
   <div class="status-pill" id="statusPill">
     <div class="status-dot"></div>
     <span id="statusText">IDLE</span>
   </div>
 
+  <!-- Stats -->
   <div class="stats-row">
     <div class="stat-box"><div class="stat-val" id="statVol">0%</div><div class="stat-lbl">Volume</div></div>
     <div class="stat-box"><div class="stat-val" id="statSpeed">1.0×</div><div class="stat-lbl">Speed</div></div>
     <div class="stat-box"><div class="stat-val" id="statDelay">—</div><div class="stat-lbl">Delay</div></div>
   </div>
 
-  <!-- ====== CONTROLS PANEL ====== -->
+  <!-- ===== MODE PILLS ===== -->
+  <div class="mode-row">
+    <div class="mode-pill" id="modePocket" onclick="applyMode('pocket')">
+      <span class="mode-icon">👖</span>
+      <div class="mode-lbl">
+        <span class="mode-name">Pocket Mode</span>
+        <span class="mode-sub">High threshold</span>
+      </div>
+    </div>
+    <div class="mode-pill" id="modeHand" onclick="applyMode('hand')">
+      <span class="mode-icon">✋</span>
+      <div class="mode-lbl">
+        <span class="mode-name">In Hand</span>
+        <span class="mode-sub">Low threshold</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CONTROLS PANEL ===== -->
   <div class="panel-wrap">
     <div class="panel-header" id="panelHeader">
-      <span class="panel-title">⚙️ CONTROLS</span>
+      <span class="panel-title">⚙️ Controls</span>
       <span class="panel-chevron" id="chevron">▼</span>
     </div>
     <div class="panel-body" id="panelBody">
@@ -306,42 +383,16 @@ input[type=range]::-moz-range-thumb {
     </div>
   </div>
 
-  <button class="btn-start" id="btnStart">🐔 START GAME</button>
-  <p class="hint" id="hintText">Tap START to grant motion access and begin.<br>Requires <strong>HTTPS</strong> on iOS Safari.</p>
+  <button class="btn-start" id="btnStart">🐔 Start Game</button>
+  <p class="hint" id="hintText">Tap Start Game to grant motion access and begin.<br>Requires <strong>HTTPS</strong> on iOS Safari.</p>
 
-</div>
+</div><!-- /app -->
 
 <script>
 /* ================================================================
-   CHICKEN PARTY — v2  (Fixed motion detection + Controls panel)
-   ================================================================
-
-   THE CORE FIX — REAL MOTION vs GYRO DRIFT
-   ─────────────────────────────────────────
-   Problem with v1: The raw magnitude of accelerationIncludingGravity
-   is always ~9.8 m/s² (gravity) even when perfectly still. Small
-   angle changes (gyro drift, breathing, pocket wobble) shift it
-   slightly, causing false triggers.
-
-   Solution — Rolling Baseline Subtraction:
-     1. Keep a rolling window of the last N raw magnitude samples.
-     2. baseline = average(window)  → tracks the "static" reading.
-     3. activeDelta = |currentSmoothed - baseline|
-        This value is ~0 when still, and spikes only on real shakes.
-     4. Only trigger audio if activeDelta >= cfg.threshold.
-
-   This way gravity and drift are cancelled out, and only genuine
-   physical acceleration changes produce sound.
-
-   CONTROLS
-   ─────────
-   All key parameters are live-tunable via sliders in the panel:
-     • Motion Threshold  — how big activeDelta must be to count
-     • Smoothing (EMA α) — reaction speed
-     • Baseline Window   — how many frames define "still"
-     • Min/Max Delay     — inter-cluck timing range
-     • Master Volume     — output ceiling
-     • Pitch Sensitivity — playbackRate range multiplier
+   CHICKEN PARTY — v3
+   Adds: Pocket Mode / In Hand mode presets
+         SF Pro Display fonts throughout
    ================================================================ */
 
 // DOM
@@ -358,6 +409,8 @@ const rippleEl   = document.getElementById('ripple');
 const panicFlash = document.getElementById('panicFlash');
 const panelHeader= document.getElementById('panelHeader');
 const panelBody  = document.getElementById('panelBody');
+const modePocket = document.getElementById('modePocket');
+const modeHand   = document.getElementById('modeHand');
 
 // Panel toggle
 panelHeader.addEventListener('click', () => {
@@ -365,56 +418,114 @@ panelHeader.addEventListener('click', () => {
   panelHeader.classList.toggle('open', open);
 });
 
-// ── Live config object ──────────────────────────────────────────
-// All sliders write here; motion loop reads from here each frame.
+// ── Live config ─────────────────────────────────────────────────
 const cfg = {
-  threshold:  4.0,    // activeDelta must exceed this to be "real movement"
-  emaAlpha:   0.25,   // EMA smoothing coefficient (0 = none, 1 = raw)
-  windowSize: 8,      // rolling baseline window depth (frames)
-  minDelay:   500,    // minimum ms between clucks (fastest)
-  maxDelay:   2500,   // maximum ms between clucks (slowest)
-  masterVol:  0.80,   // volume ceiling
-  pitchRange: 1.5,    // playbackRate variance range
+  threshold:  4.0,
+  emaAlpha:   0.25,
+  windowSize: 8,
+  minDelay:   500,
+  maxDelay:   2500,
+  masterVol:  0.80,
+  pitchRange: 1.5,
 };
 
-// Slider definitions
+// ── Mode presets ─────────────────────────────────────────────────
+// Values read directly from the screenshots provided.
+const PRESETS = {
+  pocket: {
+    // Image 1 (pocket mode)
+    sliderThreshold: '1.0',
+    sliderSmooth:    '0.15',
+    sliderWindow:    '25',
+    sliderMinDelay:  '100',
+    sliderMaxDelay:  '1000',
+    sliderVolume:    '1.0',   // 100%
+    sliderPitch:     '0.7',
+  },
+  hand: {
+    // Image 2 (in hand mode)
+    sliderThreshold: '3.0',
+    sliderSmooth:    '0.20',
+    sliderWindow:    '30',
+    sliderMinDelay:  '100',
+    sliderMaxDelay:  '1000',
+    sliderVolume:    '1.0',   // 100%
+    sliderPitch:     '0.7',
+  },
+};
+
+let activeMode = null; // 'pocket' | 'hand' | null
+
+function applyMode(mode) {
+  activeMode = mode;
+
+  // Update pill highlights
+  modePocket.className = 'mode-pill' + (mode === 'pocket' ? ' active-pocket' : '');
+  modeHand.className   = 'mode-pill' + (mode === 'hand'   ? ' active-hand'   : '');
+
+  // Apply preset values to sliders + cfg
+  const preset = PRESETS[mode];
+  SLIDER_CFG.forEach(({ id, param, fmt }) => {
+    const el  = document.getElementById(id);
+    const lbl = document.getElementById('val' + id.replace('slider', ''));
+    if (preset[id] !== undefined) {
+      el.value = preset[id];
+      cfg[param] = parseFloat(el.value);
+      lbl.textContent = fmt(cfg[param]);
+      updateSliderFill(el);
+    }
+  });
+}
+
+// ── Slider registry ──────────────────────────────────────────────
+const SLIDER_CFG = [
+  { id:'sliderThreshold', param:'threshold',  fmt: v => v.toFixed(1)          },
+  { id:'sliderSmooth',    param:'emaAlpha',   fmt: v => v.toFixed(2)          },
+  { id:'sliderWindow',    param:'windowSize', fmt: v => Math.round(v)         },
+  { id:'sliderMinDelay',  param:'minDelay',   fmt: v => Math.round(v) + 'ms'  },
+  { id:'sliderMaxDelay',  param:'maxDelay',   fmt: v => Math.round(v) + 'ms'  },
+  { id:'sliderVolume',    param:'masterVol',  fmt: v => Math.round(v * 100) + '%' },
+  { id:'sliderPitch',     param:'pitchRange', fmt: v => v.toFixed(1)          },
+];
+
 const DEFAULTS = {
   sliderThreshold: '4',   sliderSmooth:   '0.25', sliderWindow:   '8',
   sliderMinDelay:  '500', sliderMaxDelay: '2500',
   sliderVolume:    '0.8', sliderPitch:    '1.5',
 };
 
-const SLIDER_CFG = [
-  { id:'sliderThreshold', param:'threshold',  fmt: v => v.toFixed(1)         },
-  { id:'sliderSmooth',    param:'emaAlpha',   fmt: v => v.toFixed(2)         },
-  { id:'sliderWindow',    param:'windowSize', fmt: v => Math.round(v)        },
-  { id:'sliderMinDelay',  param:'minDelay',   fmt: v => Math.round(v)+'ms'   },
-  { id:'sliderMaxDelay',  param:'maxDelay',   fmt: v => Math.round(v)+'ms'   },
-  { id:'sliderVolume',    param:'masterVol',  fmt: v => Math.round(v*100)+'%'},
-  { id:'sliderPitch',     param:'pitchRange', fmt: v => v.toFixed(1)         },
-];
-
 function updateSliderFill(el) {
   const pct = (el.value - el.min) / (el.max - el.min) * 100;
   el.style.background = `linear-gradient(to right, var(--yellow) ${pct}%, var(--border) ${pct}%)`;
 }
 
+// Wire sliders → cfg, also deactivate mode pill if user manually adjusts
 SLIDER_CFG.forEach(({ id, param, fmt }) => {
   const el  = document.getElementById(id);
-  const lbl = document.getElementById('val' + id.replace('slider',''));
+  const lbl = document.getElementById('val' + id.replace('slider', ''));
   function sync() {
     cfg[param] = parseFloat(el.value);
     lbl.textContent = fmt(cfg[param]);
     updateSliderFill(el);
   }
-  el.addEventListener('input', sync);
+  el.addEventListener('input', () => {
+    // If user drags a slider manually, deactivate mode highlight
+    activeMode = null;
+    modePocket.className = 'mode-pill';
+    modeHand.className   = 'mode-pill';
+    sync();
+  });
   sync();
 });
 
+// Reset button
 document.getElementById('btnReset').addEventListener('click', () => {
+  activeMode = null;
+  modePocket.className = 'mode-pill';
+  modeHand.className   = 'mode-pill';
   SLIDER_CFG.forEach(({ id, param, fmt }) => {
     const el  = document.getElementById(id);
-    const lbl = document.getElementById('val' + id.replace('slider',''));
+    const lbl = document.getElementById('val' + id.replace('slider', ''));
     el.value = DEFAULTS[id];
     cfg[param] = parseFloat(el.value);
     lbl.textContent = fmt(cfg[param]);
@@ -422,7 +533,7 @@ document.getElementById('btnReset').addEventListener('click', () => {
   });
 });
 
-// ── Audio engine ────────────────────────────────────────────────
+// ── Audio engine ─────────────────────────────────────────────────
 let audioCtx      = null;
 let chickenBuffer = null;
 
@@ -440,19 +551,11 @@ async function initAudio() {
   }
 }
 
-/**
- * Fire one cluck.
- * @param {number} intensity  0–1, normalised motion strength
- * @param {number} panic      0–1, sustained-movement bonus
- */
 function playCluck(intensity, panic) {
   if (!audioCtx || !chickenBuffer) return;
   if (audioCtx.state === 'suspended') audioCtx.resume();
 
-  // Volume: square curve keeps soft sounds subtle; panic adds warmth
-  const gain = Math.min(1, (intensity * intensity + panic * 0.25) * cfg.masterVol);
-
-  // Pitch: base 0.6 + intensity × range + tiny jitter
+  const gain   = Math.min(1, (intensity * intensity + panic * 0.25) * cfg.masterVol);
   const jitter = (Math.random() - 0.5) * 0.1;
   const rate   = Math.max(0.3, Math.min(4.0, 0.6 + intensity * cfg.pitchRange + jitter));
 
@@ -468,13 +571,13 @@ function playCluck(intensity, panic) {
   triggerRipple(gain);
 }
 
-// ── Motion detection ────────────────────────────────────────────
+// ── Motion detection ─────────────────────────────────────────────
 let isRunning    = false;
-let smoothMag    = 0;         // EMA-smoothed magnitude
-let windowBuf    = [];        // rolling window for baseline
-let lastTrigger  = 0;         // timestamp of last cluck (ms)
-let triggerDelay = 2500;      // current inter-cluck delay (ms)
-let panicLevel   = 0;         // 0–1 sustained-movement accumulator
+let smoothMag    = 0;
+let windowBuf    = [];
+let lastTrigger  = 0;
+let triggerDelay = 2500;
+let panicLevel   = 0;
 
 function rollingAvg() {
   return windowBuf.length ? windowBuf.reduce((a, b) => a + b, 0) / windowBuf.length : 0;
@@ -482,66 +585,52 @@ function rollingAvg() {
 
 function onMotion(e) {
   if (!isRunning) return;
-
-  // Prefer accelerationIncludingGravity (works even if acceleration is null)
   const acc = e.accelerationIncludingGravity || e.acceleration;
   if (!acc) return;
 
   const x = acc.x || 0, y = acc.y || 0, z = acc.z || 0;
-
-  // Raw L1 magnitude
   const raw = Math.abs(x) + Math.abs(y) + Math.abs(z);
 
-  // ── Step 1: rolling baseline ──────────────────────────────────
-  // Keep the last N raw values. Their average is the "resting"
-  // reading — includes gravity, tilt, and slow drift.
+  // Rolling baseline (cancels gravity + drift)
   windowBuf.push(raw);
   if (windowBuf.length > Math.max(2, Math.round(cfg.windowSize))) windowBuf.shift();
   const baseline = rollingAvg();
 
-  // ── Step 2: EMA smooth the current raw reading ────────────────
+  // EMA smooth
   smoothMag = cfg.emaAlpha * raw + (1 - cfg.emaAlpha) * smoothMag;
 
-  // ── Step 3: active delta = deviation from static baseline ─────
-  // This cancels gravity + drift; is ~0 when still, spikes on shakes.
+  // Active delta — zero when still, non-zero on real shakes
   const activeDelta = Math.abs(smoothMag - baseline);
+  const isMoving    = activeDelta >= cfg.threshold;
+  const intensity   = Math.min(1, activeDelta / (cfg.threshold * 3));
 
-  // ── Step 4: threshold gate ────────────────────────────────────
-  // Only flag as "real movement" if delta clears the threshold.
-  const isMoving = activeDelta >= cfg.threshold;
-
-  // Normalise delta to 0–1 (3× threshold = full scale)
-  const intensity = Math.min(1, activeDelta / (cfg.threshold * 3));
-
-  // ── Panic accumulation ────────────────────────────────────────
+  // Panic accumulation
   if (isMoving && intensity > 0.35) {
     panicLevel = Math.min(1, panicLevel + 0.0003 * intensity);
   } else {
     panicLevel = Math.max(0, panicLevel - 0.001);
   }
 
-  // ── Dynamic delay ─────────────────────────────────────────────
-  // Lerp between maxDelay (still) and minDelay (full intensity).
+  // Dynamic delay
   triggerDelay = cfg.maxDelay - intensity * (cfg.maxDelay - cfg.minDelay);
 
-  // ── Trigger ───────────────────────────────────────────────────
+  // Trigger
   const now = performance.now();
   if (isMoving && (now - lastTrigger) >= triggerDelay) {
     lastTrigger = now;
     playCluck(intensity, panicLevel);
   }
 
-  // ── UI ────────────────────────────────────────────────────────
   updateUI(intensity, isMoving);
 }
 
-// ── UI helpers ──────────────────────────────────────────────────
+// ── UI ────────────────────────────────────────────────────────────
 const CIRC = 2 * Math.PI * 42;
 
 function updateUI(intensity, isMoving) {
   meterArc.style.strokeDasharray = `${CIRC * intensity} ${CIRC}`;
   const g = Math.round(233 - intensity * 156);
-  meterArc.style.stroke = `rgb(255,${Math.max(77, g)},${Math.round(77*(1-intensity))})`;
+  meterArc.style.stroke = `rgb(255,${Math.max(77, g)},${Math.round(77 * (1 - intensity))})`;
   meterVal.textContent = Math.round(intensity * 100);
 
   const vol   = Math.min(1, intensity * intensity * cfg.masterVol + panicLevel * 0.2);
@@ -573,20 +662,19 @@ function triggerRipple(gain) {
   rippleEl.classList.add('burst');
 }
 
-// ── Start / Stop ────────────────────────────────────────────────
+// ── Start / Stop ──────────────────────────────────────────────────
 btnStart.addEventListener('click', async () => {
   if (isRunning) { stopGame(); return; }
   await startGame();
 });
 
 async function startGame() {
-  // iOS 13+ explicit permission
   if (typeof DeviceMotionEvent !== 'undefined' &&
       typeof DeviceMotionEvent.requestPermission === 'function') {
     try {
       const p = await DeviceMotionEvent.requestPermission();
       if (p !== 'granted') {
-        hintText.textContent = '⚠️ Motion permission denied. Allow it in Settings → Safari → Motion & Orientation.';
+        hintText.textContent = '⚠️ Motion permission denied. Allow in Settings → Safari → Motion & Orientation.';
         return;
       }
     } catch (ex) {
@@ -598,14 +686,13 @@ async function startGame() {
   hintText.textContent = '🎵 Loading chicken.mp3…';
   if (!await initAudio()) return;
 
-  // Reset state
   smoothMag = 0; windowBuf = []; panicLevel = 0; lastTrigger = 0;
   window.addEventListener('devicemotion', onMotion);
   isRunning = true;
-  btnStart.textContent = '🛑 STOP GAME';
+  btnStart.textContent = '🛑 Stop Game';
   btnStart.classList.add('stop');
   setStatus('WAITING', '');
-  hintText.textContent = 'Move to cluck! Tweak Controls to tune sensitivity 🐔';
+  hintText.textContent = 'Move to cluck! Pick a mode or tune Controls 🐔';
 }
 
 function stopGame() {
@@ -614,10 +701,10 @@ function stopGame() {
   meterArc.style.strokeDasharray = `0 ${CIRC}`;
   meterVal.textContent = '0';
   statVol.textContent = '0%'; statSpeed.textContent = '1.0×'; statDelay.textContent = '—';
-  btnStart.textContent = '🐔 START GAME';
+  btnStart.textContent = '🐔 Start Game';
   btnStart.classList.remove('stop');
   setStatus('IDLE', '');
-  hintText.innerHTML = 'Tap START to grant motion access and begin.<br>Requires <strong>HTTPS</strong> on iOS Safari.';
+  hintText.innerHTML = 'Tap Start Game to grant motion access and begin.<br>Requires <strong>HTTPS</strong> on iOS Safari.';
 }
 
 if (typeof DeviceMotionEvent === 'undefined') {
